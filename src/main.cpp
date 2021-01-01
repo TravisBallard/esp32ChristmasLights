@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <FastLED.h>
 
 FASTLED_USING_NAMESPACE
 
@@ -125,24 +126,74 @@ void confetti()
   leds[pos] += CHSV( gHue + random8(64), 200, 255);
 }
 
+// void xmas_12()
+// {
+//   // a colored dot sweeping back and forth, with fading trails
+//   fadeToBlackBy( leds, NUM_LEDS, 1);
+//   CRGBPalette16 palette = christmasPalette2; 
+//   int pos = beatsin16( 5, 0, NUM_LEDS-1 );
+//   leds[pos] += ColorFromPalette ( palette, gHue );
+// }
+
+void xmas_13()
+{
+  // a colored dot sweeping back and forth, with fading trails
+  static int lastPos = 0;
+  fadeToBlackBy( leds, NUM_LEDS, 20);
+  CRGBPalette16 palette = christmasPalette; 
+  int pos = beatsin16( 8, 0, NUM_LEDS-1 );
+
+  if (abs(pos - lastPos) > 5) { lastPos = pos; }
+   while (lastPos != pos) {
+    if (lastPos < pos) {
+      lastPos++;
+    } else {
+      lastPos--;
+    }
+
+    leds[lastPos] += ColorFromPalette(palette, gHue+(lastPos*2));
+  }
+}
+
 void xmas_12()
 {
   // a colored dot sweeping back and forth, with fading trails
+  static int lastPos = 0;
   fadeToBlackBy( leds, NUM_LEDS, 20);
-  CRGBPalette16 palette = christmasPalette2;
-  int pos = beatsin16( 20, 0, NUM_LEDS-1 );
-  leds[pos] += ColorFromPalette(palette, gHue+(pos*2));
+  CRGBPalette16 palette = christmasPalette2; 
+  int pos = beatsin16( 8, 0, NUM_LEDS-1 );
+
+  if (abs(pos - lastPos) > 5) { lastPos = pos; }
+   while (lastPos != pos) {
+    if (lastPos < pos) {
+      lastPos++;
+    } else {
+      lastPos--;
+    }
+
+    leds[lastPos] += ColorFromPalette(palette, gHue+(lastPos*2));
+  }
 }
 
 void xmas_11() {
   // eight colored dots, weaving in and out of sync with each other
+  static int lastPos = 0;
   fadeToBlackBy( leds, NUM_LEDS, 20);
-  CRGBPalette16 palette = christmasPalette3;
-  byte dothue = 0;
+  CRGBPalette16 palette = christmasPalette2; 
+
   for( int i = 0; i < 8; i++) {
-    //leds[beatsin16( i+7, 0, NUM_LEDS-1 )] |= CHSV(dothue, 200, 255);
-    leds[beatsin16( i+7, 0, NUM_LEDS-1 )] = ColorFromPalette(palette, dothue+(i*2), dothue+(i*10));
-    dothue += 32;
+    int pos = beatsin16( i, 0, NUM_LEDS-1 );
+
+    if (abs(pos - lastPos) > 5) { lastPos = pos; }
+    while (lastPos != pos) {
+      if (lastPos < pos) {
+        lastPos++;
+      } else {
+        lastPos--;
+      }
+
+      leds[lastPos] += ColorFromPalette(palette, gHue+(lastPos*2));
+    }
   }
 }
 
@@ -152,7 +203,7 @@ void xmas_10()
   EVERY_N_MILLISECONDS(50) {
     fadeToBlackBy( leds, NUM_LEDS, 10);
   }
-  addPaletteGlitter(christmasPalette, 50);
+  addPaletteGlitter(christmasPalette, 80);
 }
 
 void xmas_9()
@@ -161,7 +212,7 @@ void xmas_9()
   EVERY_N_MILLISECONDS(50) {
     fadeToBlackBy( leds, NUM_LEDS, 10);
   }
-  addPaletteGlitter(christmasPalette2, 80);
+  addPaletteGlitter(christmasPalette2, 100);
   addGlitter(10);
 }
 
@@ -171,14 +222,14 @@ void xmas_8()
   EVERY_N_MILLISECONDS(100) {
     fadeToBlackBy( leds, NUM_LEDS, 20);
   }
-  addPaletteGlitter(christmasPalette3, 50);
+  addPaletteGlitter(christmasPalette3, 100);
 }
 
 void xmas_7()
 {
   // colored speckles from a pelette that blink in and fade smoothly
   fadeToBlackBy( leds, NUM_LEDS, 20);
-  addChristmasGlitter(10);    
+  addChristmasGlitter(80);    
 }
 
 void xmas_6()
@@ -188,7 +239,7 @@ void xmas_6()
   CRGBPalette16 palette = christmasPalette3;
   int pos = random16(NUM_LEDS);
   leds[pos] += ColorFromPalette(palette, gHue+(pos*2), gHue+(pos*10));
-  addGlitter(40);
+  addGlitter(100);
 }
 
 void xmas_5() {
@@ -198,7 +249,7 @@ void xmas_5() {
   byte dothue = 0;
   for( int i = 0; i < 8; i++) {
     //leds[beatsin16( i+7, 0, NUM_LEDS-1 )] |= CHSV(dothue, 200, 255);
-    leds[beatsin16( i+7, 0, NUM_LEDS-1 )] = ColorFromPalette(palette, dothue+(i*2), dothue+(i*10));
+    leds[beatsin16( i+2, 0, NUM_LEDS-1 )] = ColorFromPalette(palette, dothue+(i*2), dothue+(i*10));
     dothue += 32;
   }
 }
@@ -206,10 +257,21 @@ void xmas_5() {
 void xmas_4()
 {
   // a colored dot sweeping back and forth, with fading trails
+  static int lastPos = 0;
   fadeToBlackBy( leds, NUM_LEDS, 20);
-  CRGBPalette16 palette = christmasPalette;
-  int pos = beatsin16( 20, 0, NUM_LEDS-1 );
-  leds[pos] += ColorFromPalette(palette, gHue+(pos*2));
+  CRGBPalette16 palette = christmasPalette3; 
+  int pos = beatsin16( 10, 0, NUM_LEDS-1 );
+
+  if (abs(pos - lastPos) > 5) { lastPos = pos; }
+   while (lastPos != pos) {
+    if (lastPos < pos) {
+      lastPos++;
+    } else {
+      lastPos--;
+    }
+
+    leds[lastPos] += ColorFromPalette(palette, gHue+(pos*2));
+  }
 }
 
 void xmas_3()
@@ -219,7 +281,7 @@ void xmas_3()
   CRGBPalette16 palette = christmasPalette;
   int pos = random16(NUM_LEDS);
   leds[pos] += ColorFromPalette(palette, gHue+(pos*2), gHue+(pos*10));
-  addGlitter(10);
+  addGlitter(80);
 }
 
 void xmas_2() {
@@ -229,7 +291,7 @@ void xmas_2() {
   byte dothue = 0;
   for( int i = 0; i < 8; i++) {
     //leds[beatsin16( i+7, 0, NUM_LEDS-1 )] |= CHSV(dothue, 200, 255);
-    leds[beatsin16( i+7, 0, NUM_LEDS-1 )] = ColorFromPalette(palette, dothue+(i*2), dothue+(i*10));
+    leds[beatsin16( i+2, 0, NUM_LEDS-1 )] = ColorFromPalette(palette, dothue+(i*2), dothue+(i*10));
     dothue += 32;
   }
 }
@@ -255,17 +317,21 @@ void setup() {
 }
   
 SimplePatternList gPatterns = { 
+  xmas_13,
   xmas_12,
-  xmas_11,
-  xmas_10,
-  xmas_9,
+  xmas_12,
+  //xmas_11,
+  // xmas_10,
+  // xmas_9,
   xmas_8,
   xmas_7,
   xmas_6,
-  xmas_5,
+  // xmas_5,
+  xmas_4,
+  xmas_4,
   xmas_4,
   xmas_3,
-  xmas_2,
+  // xmas_2,
   xmas_1,
 };
 
@@ -292,6 +358,6 @@ void loop()
 
   // do some periodic updates
   EVERY_N_MILLISECONDS( 20 ) { gHue++; } // slowly cycle the "base color" through the rainbow
-  EVERY_N_MINUTES( 2 ) { randomPattern(); } // change patterns periodically
-  //EVERY_N_SECONDS( 10 ) { randomPattern(); } // change patterns periodically
+  //EVERY_N_MINUTES( 2 ) { randomPattern(); } // change patterns periodically
+  EVERY_N_SECONDS( 45 ) { randomPattern(); } // change patterns periodically
 }
